@@ -1,3 +1,5 @@
+// Тоглоом дууссан эсэхийг хадгалах төлөвийн хувьсагч
+var isNewGame;
 // Тоглоомын бүх газар ашиглагдах глобаль хувьсагчийг энд зарлая.
 var activePlayer;
 // 2 тоглогчийн цуглуулсан оноонууд.
@@ -9,9 +11,10 @@ var diceDom = document.querySelector('.dice');
 initGame();
 // Тоглоомыг шинээр эхлүүлэхэд бэлтгэнэ.
 function initGame(){
+    // Тоглоом эхэллээ гэдэг төлөвт орно.
+    isNewGame = true;
     // Тоглогчийн ээлжийг хадгалах хувьсагч - 1р тоглогчийн 0, 2р тоглогчийг 1 гэж тэмдэглэе.
     activePlayer = 0;
-
     // Тоглогчдын цуглуулсан оноог хадгалах хувьсагч.
     scores = [0, 0];
     // Тоглогчийн ээлжиндээ цуглуулж байгаа оноог хадгалах хувьсагч
@@ -25,7 +28,7 @@ function initGame(){
 
     document.querySelector(".player-0-panel").classList.remove("active");
     document.querySelector(".player-1-panel").classList.remove("active");
-    
+
     document.querySelector(".player-0-panel").classList.add("active");
 
     document.getElementById('score-0').textContent = '0';
@@ -39,6 +42,7 @@ function initGame(){
 // Шоог шидэх эвент листенер 
 document.querySelector('.btn-roll').addEventListener("click", function (){
 
+    if(isNewGame){
     // random-oor 1-6 гэсэн утгыг энэ хувьсагчинд оноож өгнө.
     var diceNumber = Math.floor(Math.random()* 6) + 1;
 
@@ -57,10 +61,14 @@ document.querySelector('.btn-roll').addEventListener("click", function (){
         // Энэ тоглогчийн ээлжиндээ цуглуулсан оноог 0 болгоно.
         toglogchSolih();
     }
+    }else{
+        alert("Тоглоом дууссан байна New Game товчийг дарж шинээр эхлэнэ үү!")
+    }
 });
 // HOLD товчны эвент листенер
 document.querySelector(".btn-hold").addEventListener("click", function(){
-    // Уг тоглогчийн цуглуулсан ээлжийн оноог глобаль оноон дээр нэмж өгнө.
+    if(isNewGame){
+        // Уг тоглогчийн цуглуулсан ээлжийн оноог глобаль оноон дээр нэмж өгнө.
     // if(activePlayer === 0){
     //     scores[0] = scores[0] + roundScore;
     //     document.getElementById('score-0').textContent = scores[0];
@@ -68,18 +76,23 @@ document.querySelector(".btn-hold").addEventListener("click", function(){
     //     scores[1] = scores[1] + roundScore; 
     //     document.getElementById('score-1').textContent = scores[1];
     // }
-    scores[activePlayer] = scores[activePlayer] + roundScore;
-    // Дэлгэц дээрх оноог өөрчлөх
-    document.getElementById("score-" + activePlayer).textContent = scores[activePlayer];
+    
+        scores[activePlayer] = scores[activePlayer] + roundScore;
+        // Дэлгэц дээрх оноог өөрчлөх
+        document.getElementById("score-" + activePlayer).textContent = scores[activePlayer];
 
-    // Уг тоглогч хожсон эсэхийг шалгах
-    if(scores[activePlayer] >= 15){
-    // Ялагч гэсэн текстийг нэрнийнх нь оронд гаргана
-    document.getElementById("name-" + activePlayer).textContent = "Winner!!!";
-    document.querySelector(".player-"+ activePlayer +"-panel").classList.add("winner");
-    document.querySelector(".player-"+ activePlayer +"-panel").classList.remove("active");
+        // Уг тоглогч хожсон эсэхийг шалгах
+        if(scores[activePlayer] >= 15){
+        isNewGame = false;
+        // Ялагч гэсэн текстийг нэрнийнх нь оронд гаргана
+        document.getElementById("name-" + activePlayer).textContent = "Winner!!!";
+        document.querySelector(".player-"+ activePlayer +"-panel").classList.add("winner");
+        document.querySelector(".player-"+ activePlayer +"-panel").classList.remove("active");
+        }else{
+            toglogchSolih();
+        }
     }else{
-        toglogchSolih();
+        alert("Тоглоом дууссан байна New Game товчийг дарж шинээр эхлэнэ үү!")
     }
 })
 
